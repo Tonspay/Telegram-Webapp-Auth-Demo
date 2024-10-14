@@ -69,7 +69,7 @@ app.get("/head", (req, res) => {
                         data
                     )
                     const bs64 = Buffer.from(data).toString("base64")
-                    const redirect =  location.origin + '/auth?auth='+bs64+"&tgWebAppStartParam="+window.Telegram.WebApp.initDataUnsafe.start_param
+                    const redirect =  location.origin + '/api/auth?auth='+bs64+"&tgWebAppStartParam="+window.Telegram.WebApp.initDataUnsafe.start_param
                     location.href = redirect
     
                 }
