@@ -172,7 +172,8 @@ app.get("/head", (req, res) => {
         )
     }
     setTimeout(() => {
-        fakeRedis.delete(req.query.tgWebAppStartParam)
+        delete fakeRedis[req.query.tgWebAppStartParam]
+        // fakeRedis.delete(req.query.tgWebAppStartParam)
     }, 36000);
     }else{
       res.status(200).send({
