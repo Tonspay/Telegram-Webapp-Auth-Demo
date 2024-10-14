@@ -190,11 +190,12 @@ app.get("/result/:data", async (req, res) => {
             "code":200,
             "data":fakeRedis[key]
         })
+    }else{
+        res.send({
+            "code":500,
+            "data":"failed"
+        })
     }
-    res.send({
-        "code":500,
-        "data":"failed"
-    })
 });
 
 function tgVerfiy(apiToken, telegramInitData) {
