@@ -19,6 +19,7 @@ const signKp = nacl.sign.keyPair.fromSecretKey(
 
 const app = express();
 
+let fakeRedis = {}
 
 app.get("/", (req, res) =>  res.send({
     "code":200,
@@ -82,7 +83,6 @@ app.get("/head", (req, res) => {
   
     res.send(htmlContent);
   });
-  // Endpoint to handle the Telegram callback
   app.get("/auth", async (req, res) => {
   
     const rawData = Buffer.from(req.query.auth,"base64").toString("utf-8")
@@ -162,14 +162,41 @@ app.get("/head", (req, res) => {
       `
 
     res.send(htmlContent);
-  
+
+    fakeRedis[req.query.tgWebAppStartParam] = {
+        raw:final,
+        sign:signMessage(
+            {
+                final
+            }
+        )
+    }
+    setTimeout(() => {
+        fakeRedis.delete(req.query.tgWebAppStartParam)
+    }, 36000);
     }else{
       res.status(200).send({
         "code": 200,
         "data": "lol"
     })
     }
-  })
+})
+
+app.get("/result/:data", async (req, res) => {
+    let key = req.params.data;
+    if(fakeRedis[key])
+    {
+        res.send({
+            "code":200,
+            "data":fakeRedis[key]
+        })
+    }
+    res.send({
+        "code":500,
+        "data":"failed"
+    })
+});
+
 function tgVerfiy(apiToken, telegramInitData) {
 
   const initData = new URLSearchParams(telegramInitData);
